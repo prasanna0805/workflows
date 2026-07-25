@@ -1,6 +1,6 @@
 name: nodejs-feature-brand-workflow
 on: 
-  workflow_dispatch:
+  workflow_call: #here someone should call 
     inputs:
       project:
         description: 'project name'
