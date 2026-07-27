@@ -114,3 +114,13 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}    # optional
+
+
+      - name: check dependabot alerts
+        id: library_scan
+        uses: Posture-Cybersecurity/dependabot-security-checker@v1.1.5
+        with: 
+          github-token: ${{ secrets.DEPENDABOT_TOKEN }}
+          severrities: 'critical-high'
+          output-file: 'security-report.csv'
+          fail-on-alerts: 'true'    
