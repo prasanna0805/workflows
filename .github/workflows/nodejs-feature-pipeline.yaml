@@ -70,6 +70,10 @@ on:
         description: 'component name'
         required: true
         type: string
+env:
+  project: ${{ inputs.project }}  
+  component: ${{ inputs.component }}   
+  acc_id:  864981724645
       
  
 
@@ -136,3 +140,12 @@ jobs:
       - name: login to amazon ecr
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: build the image
+        id: build_image
+        run: |
+          docker build -t ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${APP_VERSION} .
+          docker push  ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${APP_VERSION}
+
+
+     
