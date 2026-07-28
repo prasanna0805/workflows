@@ -32,7 +32,7 @@ permissions:
   contents: write
 
 env:
-  ACC_ID: "160885265516"
+  ACC_ID: "864981724645"
   REGION: us-east-1
   CLUSTER: roboshop-dev
 
