@@ -232,7 +232,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           context: unit-tests
-          state: ${{ steps.unit_tests.outcome }}
+          state: ${{ steps.unit-tests.outcome }}
           description: Unit tests ${{ steps.unit_tests.outcome }}
 
     
