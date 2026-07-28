@@ -162,7 +162,7 @@ jobs:
       - name: push image
         id: push_image
         run: |
-          docker push  ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${APP_VERSION}    
+          docker pushh  ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${APP_VERSION}    
 
 
       - name: Send Notification to Slack
@@ -177,4 +177,4 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *${{ inputs.project }}/${{ inputs.component }}* feature pipeline: *${{ job.status }}*\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`\n*<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>*"
+                  text: "${{ job.status == 'success' && ':white_check_mark:' || ':x:' }} *${{ inputs.project }}/${{ inputs.component }}* feature pipeline: *${{ job.status }}*\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`\n*<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>*"  
