@@ -37,7 +37,7 @@ jobs:
 
     - name: Update status — unit-tests
       if: always()
-      uses:  prasanna0805/workflows/.github/actions/update-commit-status@main
+      uses: prasanna0805/workflows/.github/actions/update-commit-status@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         context: unit-tests
@@ -130,7 +130,7 @@ jobs:
 
     - name: Update status — push-image
       if: always()
-      uses:  prasanna0805/workflows/.github/actions/update-commit-status@main
+      uses: prasanna0805/workflows/.github/actions/update-commit-status@main
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         context: push-image
