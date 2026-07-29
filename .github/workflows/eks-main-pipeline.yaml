@@ -45,6 +45,12 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Debug - verify checkout
+      run: |
+        pwd
+        ls -la
+        git status    
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
