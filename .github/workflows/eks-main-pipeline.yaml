@@ -60,22 +60,22 @@ jobs:
 
     # ── DEV ────────────────────────────────────────────────────────────
 
-    # - name: Read version
-    #   if: inputs.deploy_to == 'dev'
-    #   run: |
-    #     if [ -f package.json ]; then
-    #       APP_VERSION=$(jq -r .version package.json)
-    #     elif [ -f pom.xml ]; then
-    #       APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-    #     elif [ -f version.txt ]; then
-    #       APP_VERSION=$(cat version.txt)
-    #     else
-    #       echo "::error::Cannot detect language — no package.json, pom.xml, or version.txt found"
-    #       exit 1
-    #     fi
-    #     SHORT_COMMIT=${GITHUB_SHA::7}
-    #     echo "APP_VERSION=$APP_VERSION"   >> $GITHUB_ENV
-    #     echo "SHORT_COMMIT=$SHORT_COMMIT" >> $GITHUB_ENV
+    - name: Read version
+      if: inputs.deploy_to == 'dev'
+      run: |
+        if [ -f package.json ]; then
+          APP_VERSION=$(jq -r .version package.json)
+        elif [ -f pom.xml ]; then
+          APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        elif [ -f version.txt ]; then
+          APP_VERSION=$(cat version.txt)
+        else
+          echo "::error::Cannot detect language — no package.json, pom.xml, or version.txt found"
+          exit 1
+        fi
+        SHORT_COMMIT=${GITHUB_SHA::7}
+        echo "APP_VERSION=$APP_VERSION"   >> $GITHUB_ENV
+        echo "SHORT_COMMIT=$SHORT_COMMIT" >> $GITHUB_ENV
 
     - name: Login to ECR
       if: inputs.deploy_to == 'dev'
@@ -167,21 +167,21 @@ jobs:
 
     # ── PROD ───────────────────────────────────────────────────────────
 
-    # - name: Validate change request
-    #   if: inputs.deploy_to == 'prod'
-    #   run: |
-    #     if [ -z "${{ inputs.cr_number }}" ]; then
-    #       echo "::error::CR number is required for PROD deploy."
-    #       exit 1
-    #     fi
-    #     # TODO: replace with real CR tool API call (ServiceNow, Remedy, etc.)
-    #     CR_STATUS="approved"
-    #     IN_WINDOW="true"
-    #     if [ "$CR_STATUS" != "approved" ]; then
-    #       echo "::error::CR ${{ inputs.cr_number }} is not approved."
-    #       exit 1
-    #     fi
-    #     echo "CR ${{ inputs.cr_number }} validated — status: $CR_STATUS"
+    - name: Validate change request
+      if: inputs.deploy_to == 'prod'
+      run: |
+        if [ -z "${{ inputs.cr_number }}" ]; then
+          echo "::error::CR number is required for PROD deploy."
+          exit 1
+        fi
+        # TODO: replace with real CR tool API call (ServiceNow, Remedy, etc.)
+        CR_STATUS="approved"
+        IN_WINDOW="true"
+        if [ "$CR_STATUS" != "approved" ]; then
+          echo "::error::CR ${{ inputs.cr_number }} is not approved."
+          exit 1
+        fi
+        echo "CR ${{ inputs.cr_number }} validated — status: $CR_STATUS"
 
     # ── ArgoCD deploy: update imageVersion in values-prod.yaml and push to main.
     # - name: Deploy to PROD
@@ -208,19 +208,19 @@ jobs:
     #     sed -i "s/IMAGE_VERSION/${{ inputs.version }}/g" values.yaml
     #     helm upgrade --install ${{ inputs.component }} -f values-prod.yaml -n ${{ inputs.project }}-prod --atomic --wait --timeout=5m .
 
-    # - name: Git tag
-    #   if: inputs.deploy_to == 'prod' 
-    #   run: |
-    #     if git show ${{ inputs.version }}:package.json > /dev/null 2>&1; then
-    #       APP_VERSION=$(git show ${{ inputs.version }}:package.json | jq -r .version)
-    #     elif git show ${{ inputs.version }}:pom.xml > /dev/null 2>&1; then
-    #       APP_VERSION=$(git show ${{ inputs.version }}:pom.xml | grep -m1 '<version>' | sed 's|.*<version>\(.*\)</version>.*|\1|')
-    #     elif git show ${{ inputs.version }}:version.txt > /dev/null 2>&1; then
-    #       APP_VERSION=$(git show ${{ inputs.version }}:version.txt)
-    #     fi
-    #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-    #     git tag $APP_VERSION
-    #     git push origin $APP_VERSION
+    - name: Git tag
+      if: inputs.deploy_to == 'prod' 
+      run: |
+        if git show ${{ inputs.version }}:package.json > /dev/null 2>&1; then
+          APP_VERSION=$(git show ${{ inputs.version }}:package.json | jq -r .version)
+        elif git show ${{ inputs.version }}:pom.xml > /dev/null 2>&1; then
+          APP_VERSION=$(git show ${{ inputs.version }}:pom.xml | grep -m1 '<version>' | sed 's|.*<version>\(.*\)</version>.*|\1|')
+        elif git show ${{ inputs.version }}:version.txt > /dev/null 2>&1; then
+          APP_VERSION=$(git show ${{ inputs.version }}:version.txt)
+        fi
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git tag $APP_VERSION
+        git push origin $APP_VERSION
 
     # - name: Transition Jira to Done
     #   if: inputs.deploy_to == 'prod' && inputs.jira_key != ''
