@@ -91,16 +91,16 @@ jobs:
 
     # ── ArgoCD deploy: update imageVersion in values-dev.yaml and push to main.
     # ── ArgoCD watches this repo and syncs the change to the cluster automatically.
-    - name: Deploy to DEV
-      if: inputs.deploy_to == 'dev'
-      run: |
-        git config user.email "github-actions@github.com"
-        git config user.name  "GitHub Actions"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        sed -i 's/imageVersion:.*/imageVersion: "${{ env.SHORT_COMMIT }}"/' helm/values-dev.yaml
-        git add helm/values-dev.yaml
-        git commit -m "deploy(${{ inputs.component }}): update DEV imageVersion to ${{ env.SHORT_COMMIT }}"
-        git push origin main
+    # - name: Deploy to DEV
+    #   if: inputs.deploy_to == 'dev'
+    #   run: |
+    #     git config user.email "github-actions@github.com"
+    #     git config user.name  "GitHub Actions"
+    #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+    #     sed -i 's/imageVersion:.*/imageVersion: "${{ env.SHORT_COMMIT }}"/' helm/values-dev.yaml
+    #     git add helm/values-dev.yaml
+    #     git commit -m "deploy(${{ inputs.component }}): update DEV imageVersion to ${{ env.SHORT_COMMIT }}"
+    #     git push origin main
 
     # Previous Helm-direct deploy (kept for reference):
     # - name: Deploy to DEV
@@ -141,16 +141,16 @@ jobs:
     # ── UAT ────────────────────────────────────────────────────────────
 
     # ── ArgoCD deploy: update imageVersion in values-uat.yaml and push to main.
-    - name: Deploy to UAT
-      if: inputs.deploy_to == 'uat'
-      run: |
-        git config user.email "github-actions@github.com"
-        git config user.name  "GitHub Actions"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        sed -i 's/imageVersion:.*/imageVersion: "${{ inputs.version }}"/' helm/values-uat.yaml
-        git add helm/values-uat.yaml
-        git commit -m "deploy(${{ inputs.component }}): update UAT imageVersion to ${{ inputs.version }}"
-        git push origin main
+    # - name: Deploy to UAT
+    #   if: inputs.deploy_to == 'uat'
+    #   run: |
+    #     git config user.email "github-actions@github.com"
+    #     git config user.name  "GitHub Actions"
+    #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+    #     sed -i 's/imageVersion:.*/imageVersion: "${{ inputs.version }}"/' helm/values-uat.yaml
+    #     git add helm/values-uat.yaml
+    #     git commit -m "deploy(${{ inputs.component }}): update UAT imageVersion to ${{ inputs.version }}"
+    #     git push origin main
 
     # Previous Helm-direct deploy (kept for reference):
     # - name: Checkout version for UAT
@@ -184,16 +184,16 @@ jobs:
         echo "CR ${{ inputs.cr_number }} validated — status: $CR_STATUS"
 
     # ── ArgoCD deploy: update imageVersion in values-prod.yaml and push to main.
-    - name: Deploy to PROD
-      if: inputs.deploy_to == 'prod'
-      run: |
-        git config user.email "github-actions@github.com"
-        git config user.name  "GitHub Actions"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        sed -i 's/imageVersion:.*/imageVersion: "${{ inputs.version }}"/' helm/values-prod.yaml
-        git add helm/values-prod.yaml
-        git commit -m "deploy(${{ inputs.component }}): update PROD imageVersion to ${{ inputs.version }}"
-        git push origin main
+    # - name: Deploy to PROD
+    #   if: inputs.deploy_to == 'prod'
+    #   run: |
+    #     git config user.email "github-actions@github.com"
+    #     git config user.name  "GitHub Actions"
+    #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+    #     sed -i 's/imageVersion:.*/imageVersion: "${{ inputs.version }}"/' helm/values-prod.yaml
+    #     git add helm/values-prod.yaml
+    #     git commit -m "deploy(${{ inputs.component }}): update PROD imageVersion to ${{ inputs.version }}"
+    #     git push origin main
 
     # Previous Helm-direct deploy (kept for reference):
     # - name: Checkout version for PROD
