@@ -203,7 +203,7 @@ jobs:
     #     helm upgrade --install ${{ inputs.component }} -f values-prod.yaml -n ${{ inputs.project }}-prod --atomic --wait --timeout=5m .
 
     - name: Git tag
-      if: inputs.deploy_to == 'prod'
+      if: inputs.deploy_to == 'prod' 
       run: |
         if git show ${{ inputs.version }}:package.json > /dev/null 2>&1; then
           APP_VERSION=$(git show ${{ inputs.version }}:package.json | jq -r .version)
@@ -221,4 +221,4 @@ jobs:
       uses: atlassian/gajira-transition@v3
       with:
         issue: ${{ inputs.jira_key }}
-        transition: Done 
+        transition: Done  
