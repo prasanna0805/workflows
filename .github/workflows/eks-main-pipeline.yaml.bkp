@@ -1,0 +1,58 @@
+name: eks-main-pipeline
+on:
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
+      component:
+        required: true
+        type: string
+      deploy_to:
+        required: false
+        type: string
+        default: 'dev'
+      version:
+        required: false
+        type: string
+        default: ''
+      jira_key:
+        required: false
+        type: string
+        default: ''
+      cr_number:
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+env:
+  ACC_ID: "864981724645"
+  REGION: us-east-1
+  CLUSTER: roboshop-dev
+
+jobs:
+  eks-main-pipeline:
+    runs-on: self-hosted
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+
+    - name: Deploy to UAT
+      if: inputs.deploy_to == 'uat'
+      run: |
+        git config user.email "github-actions@github.com"
+        git config user.name  "GitHub Actions"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+       
