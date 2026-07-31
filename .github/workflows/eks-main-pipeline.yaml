@@ -8,22 +8,22 @@ on:
       component:
         required: true
         type: string
-      # deploy_to:
-      #   required: false
-      #   type: string
-      #   default: 'dev'
-      # version:
-      #   required: false
-      #   type: string
-      #   default: ''
-      # jira_key:
-      #   required: false
-      #   type: string
-      #   default: ''
-      # cr_number:
-      #   required: false
-      #   type: string
-      #   default: ''
+      deploy_to:
+        required: false
+        type: string
+        default: 'dev'
+      version:
+        required: false
+        type: string
+        default: ''
+      jira_key:
+        required: false
+        type: string
+        default: ''
+      cr_number:
+        required: false
+        type: string
+        default: ''
 
 # Needed to push imageVersion commits to the protected main branch.
 # In repo settings → Branches → branch protection rule → Bypass list,
@@ -45,11 +45,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Debug - verify checkout
-      run: |
-        pwd
-        ls -la
-        git status    
+    # - name: Debug - verify checkout
+    #   run: |
+    #     pwd
+    #     ls -la
+    #     git status    
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -158,7 +158,7 @@ jobs:
     #   run: git checkout ${{ inputs.version }}
     #
     - name: Deploy to UAT
-     # if: inputs.deploy_to == 'uat'
+      if: inputs.deploy_to == 'uat'
       run: |
         aws eks update-kubeconfig --region ${{ env.REGION }} --name ${{ env.CLUSTER }}
         cd helm
