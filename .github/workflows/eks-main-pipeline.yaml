@@ -164,7 +164,7 @@ jobs:
         cd helm
         sed -i "s/IMAGE_VERSION/${{ inputs.version }}/g" values.yaml
         helm upgrade --install ${{ inputs.component }} -f values-uat.yaml -n ${{ inputs.project }}-uat --atomic --wait --timeout=5m .
-
+ 
     # ── PROD ───────────────────────────────────────────────────────────
 
     # - name: Validate change request
