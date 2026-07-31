@@ -158,7 +158,7 @@ jobs:
     #   run: git checkout ${{ inputs.version }}
     #
     - name: Deploy to UAT
-      if: inputs.deploy_to == 'uat'
+     # if: inputs.deploy_to == 'uat'
       run: |
         aws eks update-kubeconfig --region ${{ env.REGION }} --name ${{ env.CLUSTER }}
         cd helm
