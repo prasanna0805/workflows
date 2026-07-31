@@ -60,34 +60,34 @@ jobs:
 
     # ── DEV ────────────────────────────────────────────────────────────
 
-    - name: Read version
-      if: inputs.deploy_to == 'dev'
-      run: |
-        if [ -f package.json ]; then
-          APP_VERSION=$(jq -r .version package.json)
-        elif [ -f pom.xml ]; then
-          APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        elif [ -f version.txt ]; then
-          APP_VERSION=$(cat version.txt)
-        else
-          echo "::error::Cannot detect language — no package.json, pom.xml, or version.txt found"
-          exit 1
-        fi
-        SHORT_COMMIT=${GITHUB_SHA::7}
-        echo "APP_VERSION=$APP_VERSION"   >> $GITHUB_ENV
-        echo "SHORT_COMMIT=$SHORT_COMMIT" >> $GITHUB_ENV
+    # - name: Read version
+    #   if: inputs.deploy_to == 'dev'
+    #   run: |
+    #     if [ -f package.json ]; then
+    #       APP_VERSION=$(jq -r .version package.json)
+    #     elif [ -f pom.xml ]; then
+    #       APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    #     elif [ -f version.txt ]; then
+    #       APP_VERSION=$(cat version.txt)
+    #     else
+    #       echo "::error::Cannot detect language — no package.json, pom.xml, or version.txt found"
+    #       exit 1
+    #     fi
+    #     SHORT_COMMIT=${GITHUB_SHA::7}
+    #     echo "APP_VERSION=$APP_VERSION"   >> $GITHUB_ENV
+    #     echo "SHORT_COMMIT=$SHORT_COMMIT" >> $GITHUB_ENV
 
-    - name: Login to ECR
-      if: inputs.deploy_to == 'dev'
-      uses: aws-actions/amazon-ecr-login@v2
+    # - name: Login to ECR
+    #   if: inputs.deploy_to == 'dev'
+    #   uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Promote image
-      if: inputs.deploy_to == 'dev'
-      run: |
-        docker pull ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.APP_VERSION }}
-        docker tag  ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.APP_VERSION }} \
-                    ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.SHORT_COMMIT }}
-        docker push ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.SHORT_COMMIT }}
+    # - name: Promote image
+    #   if: inputs.deploy_to == 'dev'
+    #   run: |
+    #     docker pull ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.APP_VERSION }}
+    #     docker tag  ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.APP_VERSION }} \
+    #                 ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.SHORT_COMMIT }}
+    #     docker push ${{ env.ACC_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ inputs.project }}/${{ inputs.component }}:${{ env.SHORT_COMMIT }}
 
     # ── ArgoCD deploy: update imageVersion in values-dev.yaml and push to main.
     # ── ArgoCD watches this repo and syncs the change to the cluster automatically.
